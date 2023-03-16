@@ -1,5 +1,6 @@
 var knex = require("../database/connection");
 var bcrypt = require("bcrypt");
+const PasswordToken = require("./PasswordToken");
 
 class User {
   async findAll() {
@@ -34,8 +35,8 @@ class User {
   async findByEmail(email) {
     try {
       var result = await knex
-        .select(["id", "email", "name", "role"])
-        .where({email: email })
+        .select(["id", "email", "password", "name", "role"])
+        .where({ email: email })
         .table("users");
       if (result.length > 0) {
         return result[0];
@@ -60,7 +61,7 @@ class User {
           if (result == false) {
             editUser.email = email;
           } else {
-            return { status: false, err: "O e-mail já está cadastrando" };
+            return { status: false, err: "O e-mail já está cadastrado" };
           }
         }
       }
@@ -116,7 +117,7 @@ class User {
     if (user != undefined) {
       try {
         await knex.delete().where({ id: id }).table("users");
-        return {status: true};
+        return { status: true };
       } catch (err) {
         return {
           status: false,
@@ -129,6 +130,12 @@ class User {
         err: "O usuário não existe, portando não pode ser deletado.",
       };
     }
+  }
+
+  async changePassword(newPassword, id, token) {
+    var hash = await bcrypt.hash(newPassword, 5);
+    await knex.update({ password: hash }).where({ id: id }).table("users");
+    await PasswordToken.setUsed(token);
   }
 }
 

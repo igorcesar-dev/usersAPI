@@ -1,5 +1,10 @@
 var User = require("../models/User");
 var PasswordToken = require("../models/PasswordToken");
+var jwt = require("jsonwebtoken");
+
+var secret = "qualquercoisa";
+
+var bcrypt = require("bcrypt");
 
 class UserController {
   async index(req, res) {
@@ -62,38 +67,75 @@ class UserController {
       }
     }
   }
-  
-  async delete(req, res){
+
+  async delete(req, res) {
     var id = req.params.id;
 
     var result = await User.delete(id);
 
-    if(result.status){
+    if (result.status) {
       res.status(200);
-      res.send("Usuário deletado com sucesso.")
-    }else{
+      res.send("Usuário deletado com sucesso.");
+    } else {
       res.status(406);
       res.send(result.err);
     }
-
   }
 
-
-  async recoveryPassword(req, res){
+  async recoveryPassword(req, res) {
     var email = req.body.email;
 
     var result = await PasswordToken.create(email);
 
-    if(result.status){
+    if (result.status) {
       res.status(200);
       res.send(" " + result.token);
-    }else{
+    } else {
       res.status(406);
       res.send(result.err);
     }
   }
 
+  async changePassword(req, res) {
+    var token = req.body.token;
+    var password = req.body.password;
 
+    var isTokenValid = await PasswordToken.validade(token);
+
+    if (isTokenValid.status) {
+      await User.changePassword(
+        password,
+        isTokenValid.token.user_id,
+        isTokenValid.token.token
+      );
+      res.status(200);
+      res.send("Senha alterada com sucesso.");
+    } else {
+      res.status(406);
+      res.send("Token inválido.");
+    }
+  }
+
+  async login(req, res) {
+    var { email, password } = req.body;
+
+    var user = await User.findByEmail(email);
+
+    if (user != undefined) {
+      var result = await bcrypt.compare(password, user.password);
+
+      if ((result = true)) {
+        var token = jwt.sign({ email: user.email, role: user.role }, secret);
+        res.status(200);
+        res.json({ token: token });
+      } else {
+        res.status(406);
+        res.send("Senha incorreta.");
+      }
+    } else {
+      res.json({ status: false });
+    }
+  }
 }
 
 module.exports = new UserController();
