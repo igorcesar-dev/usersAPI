@@ -11,32 +11,35 @@ Está API é utilizada cada cadastrar, buscar, editar e/ou excluir usuários de 
 ### GET /
 &ensp; Esse endpoint é responsável por retornar o menu inicial da API.
 
-#### Parametros
+#### Parâmetros
 &ensp; Nenhum
 
 #### Respostas
-##### OK! 200
-&ensp; Caso essa resposta aconteça você vai receber a listagem de todos os usuários
+##### Status: 200 OK <br>
+&ensp; Caso essa resposta aconteça você vai receber o menu inicial da API.<br>
+&ensp; Exemplo de resposta:
+```
+Seja bem-vindo(a) a API de usuários, essa API foi criada no curso de Formação Node.JS
+```
+<hr>
 
 ### POST /user
 &ensp; Esse endpoint é responsável por criar um novo usuário no banco de dados, com inserção de nome, email e senha.
 
-### GET /user
-&ensp; Esse endpoint é responsável por exibir todos os usuários cadastros.
+#### Parâmetros
+```
+{
+     "name": "Igor César",
+     "email": "igor@gmail.com",
+    "password": "123"
+}
+```
 
-### GET /user/:id
-&ensp; Esse endpoint é responsável por exibir todos os usuários cadastros.
-
-### PUT /user
-
-
-### DELETE /user/:id
-
-
-### POST /recoverypassword
-
-
-### POST /changepassword
-
-
-### POST /login
+#### Respostas
+##### Status: 200 OK
+&ensp; Caso essa resposta aconteça você vai revce <br>
+&ensp; Exemplo de resposta:
+```
+Usuário cadastrado com sucesso.
+```
+<hr>
