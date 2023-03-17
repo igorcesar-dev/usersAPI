@@ -1,7 +1,7 @@
 class HomeController{
 
     async index(req, res){
-        res.send("APP EXPRESS! - Guia do programador");
+        res.send("Seja bem-vindo(a) a API de usuários, essa API foi criada no curso de Formação Node.JS");
     }
 
 }

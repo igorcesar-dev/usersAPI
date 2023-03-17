@@ -85,7 +85,7 @@ class UserController {
   async recoveryPassword(req, res) {
     var email = req.body.email;
 
-    var result = await PasswordToken.create(email);
+    var result = await User.createToken(email);
 
     if (result.status) {
       res.status(200);
@@ -123,8 +123,9 @@ class UserController {
 
     if (user != undefined) {
       var result = await bcrypt.compare(password, user.password);
+      
 
-      if ((result = true)) {
+      if ((result == true)) {
         var token = jwt.sign({ email: user.email, role: user.role }, secret);
         res.status(200);
         res.json({ token: token });
