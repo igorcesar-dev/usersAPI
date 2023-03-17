@@ -246,10 +246,10 @@ Token inválido.
 
 
 ### 9 - POST /login
-&ensp; Esse endpoint é responsável para realizar um login de um usuário retornando um token ao usuário.
+&ensp; Esse endpoint é responsável para realizar um login de um usuário retornando um token ao usuário, esse token que irá permitir o usuário ter acesso a rotas que sejam permitidas somente para ele. Por exemplo, um usuário administrador pode ter acesso à rota de cadastro, porém o usuário comum não poderá ter acesso à mesma rota, com o processo de login poderemos identificar quais usuários terão determinados acessos.
 
 #### Parâmetros
-&ensp; Na rota da API você deve digitar o token recebido da rota /recoverypassword e digitar uma nova senha. <br>
+&ensp; Na rota da API você deve digitar o email e a senha do usuário para realizar o login. <br>
 &ensp; Por exemplo:
 ```
 {
@@ -260,16 +260,18 @@ Token inválido.
 
 #### Respostas
 ##### Status: 200 OK
-&ensp; Caso essa resposta aconteça a senha será alterada com sucesso. <br>
+&ensp; Caso essa resposta aconteça, um token será retornado. <br>
 &ensp; Exemplo de resposta:
 ```
-Senha alterada com sucesso.
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imlnb3JAZ21haWwuY29tIiwicm9sZSI6MCwiaWF0IjoxNjc5MDg2MzIwfQ.kKDVRQQSZ9TKTqJ6kOkW1l-vFYJ6eX69Y2eyTOdoN5Y"
+}
 ```
 ##### Status: 406 Not Acceptable
 &ensp; Caso essa resposta aconteça, isso significa que occorreu alguma falha durante o processo. <br>
-&ensp; Motivos: O token pode ser inválido. <br>
+&ensp; Motivos: A senha pode ser inválida. <br>
 &ensp; Exemplo de resposta:
 ```
-Token inválido.
+Senha incorreta.
 ```
 <hr>
